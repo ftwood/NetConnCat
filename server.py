@@ -72,7 +72,8 @@ try:
                     continue
             if data.decode('utf-8') == '!changename':
                 users_list_to_post.pop(
-                        user_who_send)  #удаление прошлой связки имя:user_id // deleting a last pair name:user_id
+                        user_who_send)  #удаление прошлой связки имя:user_id и имя:ip// deleting a last pair name:user_id and name:ip
+                users_list.pop(user_who_send)
                 sock.sendto("u can quit".encode("utf-8"), address)
                 continue
             if data.decode('utf-8') == 'quit please.':
