@@ -29,7 +29,6 @@ users_list = {} #словарь name:user_id                                   /
 users_list_to_post = {} #словарь name:ip                                // dict name:ip 
 secret_users = {} #связки пользователей в секретных чатах               // pairs of users in secure chats
 temp_secret_users = {} #временные секретные связки                      // temporary pairs of users
-change_name_users = {} #пользователи, меняющие имя                      // users changing name
 
 try:
     users_list = load_users()
