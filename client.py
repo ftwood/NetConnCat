@@ -13,13 +13,13 @@ import string
 
 def secret_chat_listener():
     print("Начинаю обмен ключами")
-    (pubkey, privkey) = rsa.newkeys(512)  #генерация пары ключей                                        // generating a pair of keys
+    (pubkey, privkey) = rsa.newkeys(2048)  #генерация пары ключей                                        // generating a pair of keys
     sock.sendto(str(pubkey).encode('utf-8'),
                 server)  #отправка открытого ключа партнеру                                             // sending pubkey to companion
     while True:
         try:
-            data = sock.recv(1024)
-            if len(data.decode('utf-8')) == 172:
+            data = sock.recv(2048)
+            if len(data.decode('utf-8')) == 635:
                 pubkey = data.decode('utf-8')  #получаем ключ собеседника                               // getting companion's pubkey
                 pubkey = rsa.key.PublicKey(
                     int(pubkey[10:-8]), int(pubkey[-6:-1])
