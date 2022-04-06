@@ -2,7 +2,7 @@
 
 ##
 ## Description
-A messenger with DES encryption for group chat and RSA encryption for secret chat.
+A messenger with AES encryption for group chat and RSA encryption for secret chat.
 
 ## Installation
 
