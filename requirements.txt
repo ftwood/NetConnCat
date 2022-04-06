@@ -1,2 +1,2 @@
 rsa==4.6
-pyDes==2.0.1
+pycryptodome==3.12.0
