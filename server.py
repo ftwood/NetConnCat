@@ -2,7 +2,6 @@ import socket
 import json
 import time
 
-
 #выгрузка пользователей в users.txt                                     // loading users into users.txt
 def save_users(users_list):
     json.dump(users_list, open("users.txt", "w"))
@@ -23,7 +22,7 @@ def make_good_data(data):
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(('127.0.0.1', 8848))
+sock.bind(('0.0.0.0', 8848))
 clients = []  #пользовательские ip                                      // users ip
 users_list = {} #словарь name:user_id                                   // dict name:user_id
 users_list_to_post = {} #словарь name:ip                                // dict name:ip 
