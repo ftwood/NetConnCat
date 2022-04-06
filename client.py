@@ -5,11 +5,15 @@ import random
 import socket
 import threading
 from datetime import date
-from pyDes import *
+from Crypto.Cipher import AES
 import time
 import rsa
 import string
 
+# hello paranoid!
+# для того, чтобы провести трафик приложения через TOR, используй эти команды:
+# sudo apt update; sudo apt install tor                     -- если TOR не установлен
+# sudo systemctl start tor; torify python3 client.py        -- непосредственно запуск
 
 def secret_chat_listener():
     print("Начинаю обмен ключами")
@@ -86,25 +90,28 @@ def is_it_greeting(data):
     except:
         return 0
 
+def pad(text):
+    while len(text) % 16 != 0:
+        text += b' '
+    return text
 
-#шифрование сообщения                                                                                     // encrypting message(DES)
+#шифрование сообщения                                                                                     // encrypting message(AES)
 def encrypted(messg):
     key = (date.today().strftime('%d%m%Y')).encode(
-        'utf-8')  #пусть наш ключ будет сегодняшней датой                                                 // let our key be today's date
-    k = des(key, CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
-    data = k.encrypt(messg)
+               )  #пусть наш ключ будет сегодняшней датой                                                 // let our key be today's date
+    cipher = AES.new(key*2, AES.MODE_CBC, 'xqwe to aa kOlIU'.encode("utf8"))
+    ciphertext = cipher.encrypt(pad(messg))
 
-    return data
+    return ciphertext
 
 
-#дешифрование сообщения                                                                                   // decrypting message(DES)
+#дешифрование сообщения                                                                                   // decrypting message(AES)
 def decrypted(messg):
     key = (date.today().strftime('%d%m%Y')).encode(
-        'utf-8')  #пусть наш ключ будет сегодняшней датой                                                 // let our key be today's date
-    k = des(key, CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
-    data = k.decrypt(messg, padmode=PAD_PKCS5)
-
-    return data.decode('utf-8')
+               )  #пусть наш ключ будет сегодняшней датой                                                 // let our key be today's date
+    cipher = AES.new(key*2, AES.MODE_CBC, 'xqwe to aa kOlIU'.encode("utf8"))
+    plaintext = cipher.decrypt(messg)
+    return plaintext.decode('utf-8').rstrip()
 
 
 #создание уникального id                                                                                  // creating unic_id
@@ -205,7 +212,7 @@ print("""| \ | |    | |  / ____|                 / ____|    | |
 print(
     "\nДля выхода напишите !quit\nДля отображения списка пользователей напишите !users\nДля входа в секретный чат напишите !secret\nДля смены имени пользователя !changename\n"
 )
-server = ('127.0.0.1', 8848)
+server = (input("Give me IP of server - "), 8848)
 temp_data = account_check()
 verify_phrase = str(temp_data[0] + ":" + str(temp_data[1]))
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -254,7 +261,7 @@ while stop_all == 0:
             if not message.strip():  #если сообщение пустое                                             // if message is empty
                 continue
             sock.sendto(
-                encrypted((('[' + verify_phrase.split(":")[0] + ']') +
+                encrypted((('[' + verify_phrase.split(":")[0] + '] ') +
                            message).encode('utf-8')), server)
         except:
             pass
